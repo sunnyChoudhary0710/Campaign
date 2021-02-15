@@ -1,0 +1,53 @@
+.App {
+  text-align: center;
+  height: 100vh;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+.App-header {
+  max-height: 20vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  margin: 15px;
+}
+
+.element-container {
+  margin: 15px;
+}
+
+.filterContainer {
+  display: flex;
+}
+
+.appBody {
+  height: 80vh;
+  margin: 15px;
+}
+
+.filter-date-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.filter-search-container {
+
+}
+
+@keyframes App-logo-float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px)
+  }
+  100% {
+    transform: translateY(0px)
+  }
+}
