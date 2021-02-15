@@ -1,14 +1,17 @@
-import { combineReducers} from 'redux';
+import { combineReducers } from "redux";
+import InitialState from "./initialState";
 
-export const repos = (state = [], action) => {
-    switch (action.type) {
-      case 'UPDATE_REPOS':
-        return action.repos;
-      case 'CLEAR_REPOS':
-        return [];
-      default:
-        return state;
-    }
-  };
-  
-  export const reducers = combineReducers({ repos });
+export const campaigns = (state = InitialState, action) => {
+  switch (action.type) {
+    case "UPDATE_CAMPAIGNS":
+      return { ...state, campaignList: action.payload };
+    case "CLEAR_CAMPAIGNS":
+      return [];
+    case "SET_LOADING":
+      return { ...state, isLoading: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const reducers = combineReducers({ campaigns });
