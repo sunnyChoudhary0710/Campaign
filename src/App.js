@@ -5,12 +5,22 @@ import CampaignList from './features/components/List/CampaignList';
 import CampaignLoader from './features/components/common/Spinner';
 
 import { connect } from 'react-redux';
-import { getCampaigns } from './app/actions';
+import { addNewCampaign } from './app/actions';
+import { createNewCampaignList } from './features/components/common/FunctionFactory';
+import { InitialDataForCampaign } from './features/components/common/DataStore';
 
 function App(props) {
 
+  window.addNewCampaign = ( data ) => {
+    if ( Boolean(data) ) {
+      props.addNewCampaign(createNewCampaignList(data));
+    } else {
+      console.error('Please provide valid data');
+    }
+  };
+
   useEffect(() => {
-    props.getCampaigns();
+    props.addNewCampaign(createNewCampaignList(InitialDataForCampaign));
   }, []);
 
   return (
@@ -35,5 +45,5 @@ function App(props) {
 }
 
 const mapStateToProps = (state, ownProps) => ({ isLoading: state.campaigns.isLoading });
-const mapDispatchToProps = { getCampaigns };
+const mapDispatchToProps = { addNewCampaign };
 export default connect(mapStateToProps, mapDispatchToProps)(App);
