@@ -10,7 +10,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 
 import { connect } from "react-redux";
-import { getCampaigns } from "../../../app/actions";
+import { addNewCampaign } from "../../../app/actions";
 
 const columns = [
   { id: "name", label: "Name", minWidth: 100 },
@@ -30,7 +30,7 @@ const columns = [
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "active",
+    id: "status",
     label: "Active",
     minWidth: 170,
     align: "right",
@@ -55,7 +55,6 @@ const useStyles = makeStyles({
 });
 
 const CampaignList = (props) => {
-
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -79,7 +78,6 @@ const CampaignList = (props) => {
                 {columns.map((column) => (
                   <TableCell
                     key={column.id}
-                    align={column.align}
                     style={{ minWidth: column.minWidth }}
                   >
                     {column.label}
@@ -101,7 +99,7 @@ const CampaignList = (props) => {
                       {columns.map((column) => {
                         const value = row[column.id];
                         return (
-                          <TableCell key={column.id} align={column.align}>
+                          <TableCell key={column.id}>
                             {column.format && typeof value === "number"
                               ? column.format(value)
                               : value}
@@ -131,5 +129,5 @@ const CampaignList = (props) => {
 const mapStateToProps = (state, ownProps) => ({
   campaigns: state.campaigns,
 });
-const mapDispatchToProps = { getCampaigns };
+const mapDispatchToProps = { addNewCampaign };
 export default connect(mapStateToProps, mapDispatchToProps)(CampaignList);
