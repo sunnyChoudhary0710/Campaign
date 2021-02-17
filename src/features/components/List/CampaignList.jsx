@@ -55,7 +55,6 @@ const useStyles = makeStyles({
 });
 
 const CampaignList = (props) => {
-
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -79,7 +78,6 @@ const CampaignList = (props) => {
                 {columns.map((column) => (
                   <TableCell
                     key={column.id}
-                    
                     style={{ minWidth: column.minWidth }}
                   >
                     {column.label}
