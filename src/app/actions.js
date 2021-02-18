@@ -13,22 +13,24 @@ export const setLoading = (loadingState) => ({
 export const handleError = () => ({ type: "HANDLE_ERROR" });
 
 export const addNewCampaign = (campaignToAdd) => async (dispatch) => {
-  console.info("Attempting to add new campaign(s)");
-  dispatch(setLoading(true));
-  try {
-    let userList = await getUsers();
-    let finalCampaignList = checkIfUserExistForGivenCampaign(
-      campaignToAdd,
-      userList
-    );
-    dispatch(updateCampaigns(finalCampaignList));
-    dispatch(setLoading(false));
-  } catch (error) {
-    console.error(
-      "Some error occured while adding a new campaign. Please reload and try again."
-    );
-    dispatch(handleError());
-    dispatch(setLoading(false));
+  if (Boolean(campaignToAdd)) {
+    console.info("Attempting to add new campaign(s)");
+    dispatch(setLoading(true));
+    try {
+      let userList = await getUsers();
+      let finalCampaignList = checkIfUserExistForGivenCampaign(
+        campaignToAdd,
+        userList
+      );
+      dispatch(updateCampaigns(finalCampaignList));
+      dispatch(setLoading(false));
+    } catch (error) {
+      console.error(
+        "Some error occured while adding a new campaign. Please reload and try again."
+      );
+      dispatch(handleError());
+      dispatch(setLoading(false));
+    }
   }
 };
 
@@ -47,7 +49,7 @@ export const getUsers = async () => {
   }
 };
 
-export const handleSearchBy = (dispatch, value) => {
+export const handleSearchByUserName = (dispatch, value) => {
   try {
     dispatch({
       type: "UPDATE_SEARCH_BY",

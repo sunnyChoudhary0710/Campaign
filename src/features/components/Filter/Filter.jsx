@@ -1,69 +1,75 @@
 import React from "react";
-import { TextField } from "@material-ui/core";
 import moment from "moment";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import { handleSearchBy } from "../../../app/actions";
-import { connect } from "react-redux";
 
 const Filter = (props) => {
   let currentDate = new Date();
+  const [formData, updateFormDate] = React.useState(
+    props.formDate || { startDate: null, endDate: null, userName: "" }
+  );
 
-  const handleSearchBy = (value) => {
-    props.handleSearchBy(value);
+  const handleOnChange = (event) => {
+    let name = event.target.name;
+    let value = event.target.value;
+    updateFormDate((state) => ({ ...state, [name]: value }));
+  };
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+    props.triggerSearchByName(formData);
   };
 
   return (
     <div className="element-container">
       <form className="filter-date-container" noValidate autoComplete="off">
         <div>
-          <TextField
+          <input
             id="date"
             label="Start Date"
             type="date"
-            defaultValue={moment(currentDate).format("YYYY-MM-DD")}
-            InputLabelProps={{
-              shrink: true,
-            }}
+            name="startDate"
+            onChange={handleOnChange}
+            defaultValue={
+              props.startDate
+                ? moment(props.startDate).format("YYYY-MM-DD")
+                : null
+            }
             className="basic-form-element-margin"
           />
-          <TextField
+          <input
             id="date"
             label="End Date"
             type="date"
-            defaultValue={moment(currentDate).format("YYYY-MM-DD")}
-            InputLabelProps={{
-              shrink: true,
-            }}
+            name="endDate"
+            onChange={handleOnChange}
+            defaultValue={
+              props.endDate ? moment(props.endDate).format("YYYY-MM-DD") : null
+            }
             className="basic-form-element-margin"
           />
         </div>
         <div>
-          <InputLabel id="demo-simple-select-label">Age</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={props.searchBy}
-            onChange={handleSearchBy}
-          >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </Select>
-          <TextField
+          <input
             id="outlined-basic"
             label="Search"
+            name="userName"
+            placeholder="Search by user name"
+            onChange={handleOnChange}
             value={props.searchKey}
           />
+        </div>
+        <div>
+          <button
+            id="outlined-basic"
+            placeholder="Search by user name"
+            onClick={handleSearch}
+            value={props.searchKey}
+          >
+            Search
+          </button>
         </div>
       </form>
     </div>
   );
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  searchBy: state.filterForm,
-});
-const mapDispatchToProps = { handleSearchBy };
-export default connect(mapStateToProps, mapDispatchToProps)(Filter);
+export default Filter;

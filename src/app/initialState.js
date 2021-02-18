@@ -1,10 +1,13 @@
 const InitialState = {
-  campaignList: [],
-  isLoading: true,
-  isError: false,
-  filterForm: {
-    searchBy: "0",
+  campaigns: {
+    campaignList: [],
+    isLoading: true,
+    isError: false,
     searchKey: "",
+    dateRange: {
+      from: null,
+      to: null,
+    },
   },
 };
 

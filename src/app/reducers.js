@@ -6,14 +6,17 @@ export const campaigns = (state = InitialState, action) => {
     case "UPDATE_CAMPAIGNS":
       return { ...state, campaignList: action.payload };
     case "CLEAR_CAMPAIGNS":
-      return [];
+      return state;
     case "SET_LOADING":
       return { ...state, isLoading: action.payload };
-      case "SET_LOADING":
-      return { ...state, filterForm: {
-        searchBy: action.payload,
-        searchKey: state.filterForm.searchKey
-      } };
+    case "SET_LOADING":
+      return {
+        ...state,
+        filterForm: {
+          searchBy: action.payload,
+          searchKey: state.filterForm.searchKey,
+        },
+      };
     default:
       return state;
   }
