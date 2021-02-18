@@ -1,0 +1,8 @@
+export const CAMPAIGN_ENUMS = {
+  DATE_FORMAT: "MM/DD/YYYY",
+  DATE_FORMAT_UTC: "YYYY-MM-DD",
+  THOUSAND: "T",
+  MILLION: "M",
+  BILLION: "B",
+  TRILLION: "T",
+};

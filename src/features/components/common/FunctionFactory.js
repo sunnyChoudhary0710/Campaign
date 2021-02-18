@@ -1,5 +1,6 @@
 import moment from "moment";
 import store from "../../../app/store";
+import { CAMPAIGN_ENUMS } from "../common/Enums";
 
 export const createNewCampaignList = (campaign) => {
   const currentState = store.getState();
@@ -107,7 +108,7 @@ const isObject = (val) => {
 
 const calculateStatus = (endDate) => {
   let date = moment(new Date());
-  let actualEndDate = moment(endDate, "MM/DD/YYYY");
+  let actualEndDate = moment(endDate, CAMPAIGN_ENUMS.DATE_FORMAT);
   return moment(date).isBefore(actualEndDate) ? "Active" : "Inactive";
 };
 
@@ -123,8 +124,8 @@ const checkMissingItem = (obj) => {
 
 const isDateRangeInValid = (obj) => {
   let result = true;
-  let startDate = moment(obj.startDate, "MM/DD/YYYY");
-  let endDate = moment(obj.endDate, "MM/DD/YYYY");
+  let startDate = moment(obj.startDate, CAMPAIGN_ENUMS.DATE_FORMAT);
+  let endDate = moment(obj.endDate, CAMPAIGN_ENUMS.DATE_FORMAT);
   if (obj.startDate && obj.endDate && moment(startDate).isBefore(endDate)) {
     result = false;
   }
@@ -133,8 +134,20 @@ const isDateRangeInValid = (obj) => {
 
 export const formatCash = (n) => {
   if (n < 1e3) return n;
-  if (n >= 1e3 && n < 1e6) return +(n / 1e3).toFixed(1) + "K";
-  if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(1) + "M";
-  if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(1) + "B";
-  if (n >= 1e12) return +(n / 1e12).toFixed(1) + "T";
+  if (n >= 1e3 && n < 1e6)
+    return +(n / 1e3).toFixed(1) + CAMPAIGN_ENUMS.THOUSAND;
+  if (n >= 1e6 && n < 1e9)
+    return +(n / 1e6).toFixed(1) + CAMPAIGN_ENUMS.MILLION;
+  if (n >= 1e9 && n < 1e12)
+    return +(n / 1e9).toFixed(1) + CAMPAIGN_ENUMS.BILLION;
+  if (n >= 1e12) return +(n / 1e12).toFixed(1) + CAMPAIGN_ENUMS.TRILLION;
+};
+
+export const ConvertDateToUTCFormat = (inputDate) => {
+  let date = new Date(inputDate);
+  if (!isNaN(date.getTime())) {
+    return (
+      date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+    );
+  }
 };

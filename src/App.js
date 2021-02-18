@@ -4,34 +4,47 @@ import Filter from "./features/components/Filter/Filter";
 //import CampaignList from "./features/components/List/CampaignList";
 import CustomTable from "./features/components/CustomTable/CustomTable";
 import CampaignLoader from "./features/components/common/Spinner";
-
 import { connect } from "react-redux";
 import { addNewCampaign } from "./app/actions";
-import { createNewCampaignList } from "./features/components/common/FunctionFactory";
 import {
-  InitialDataForCampaign,
-  CustomTableColumn,
-} from "./features/components/common/DataStore";
+  createNewCampaignList,
+  ConvertDateToUTCFormat,
+} from "./features/components/common/FunctionFactory";
+import { CustomTableColumn } from "./features/components/common/DataStore";
+import moment from "moment";
 
 function App(props) {
-  const [tableData, updatetableData] = React.useState(props.campaignList);
+  const [tableData, updatetableData] = React.useState([]);
 
-  const triggerSearchByName = (searchKey) => {
-    let storeTableDate = props.campaignList;
-    updatetableData(
-      storeTableDate.filter((item) => {
-        return item.userName === searchKey;
-      })
-    );
+  const triggerSearch = (searchForm) => {
+    if (searchForm && searchForm.userName) {
+      searchByName(searchForm.userName);
+    } else if (searchForm && (searchForm.startDate || searchForm.endDate)) {
+      searchByDateRange(searchForm.startDate, searchForm.endDate);
+    } else {
+      updatetableData(props.campaignList);
+    }
   };
 
-  const triggerSearchByDateRange = (searchKey) => {
+  const searchByName = (searchKey) => {
     let storeTableDate = props.campaignList;
-    updatetableData(
-      storeTableDate.filter((item) => {
-        return item.userName === searchKey;
-      })
-    );
+    let filteredData = storeTableDate.filter((item) => {
+      let userName = item.userName.toLowerCase();
+      return userName.includes(searchKey);
+    });
+    updatetableData(filteredData);
+  };
+
+  const searchByDateRange = (start, end) => {
+    let storeTableDate = props.campaignList;
+    let filteredCamoaigns = storeTableDate.filter((item) => {
+      let itemStartDate = ConvertDateToUTCFormat(item.startDate);
+      let itemEndDate = ConvertDateToUTCFormat(item.endDate);
+      let isStartDateWithinRange = moment(itemStartDate).isBetween(start, end);
+      let isEndDateWithinRange = moment(itemEndDate).isBetween(start, end);
+      return isStartDateWithinRange || isEndDateWithinRange;
+    });
+    updatetableData(filteredCamoaigns);
   };
 
   window.addNewCampaign = (data) => {
@@ -43,32 +56,24 @@ function App(props) {
   };
 
   useEffect(() => {
-    props.addNewCampaign(createNewCampaignList(InitialDataForCampaign));
-  }, []);
+    updatetableData(props.campaignList);
+  }, [props.campaignList]);
 
   return (
-    // <div className="App">
     <>
       <header className="App-header">Campaigns</header>
       <div className="appBody">
-        <Filter
-          triggerSearchByName={triggerSearchByName}
-          triggerSearchByDateRange={triggerSearchByDateRange}
-        />
+        <Filter triggerSearch={triggerSearch} />
         <div className="campaign-list-container">
           {/* {props.isLoading ? <CampaignLoader /> : <CampaignList />} */}
           {props.isLoading ? (
             <CampaignLoader />
           ) : (
-            <CustomTable
-              columns={CustomTableColumn}
-              data={props.campaignList}
-            />
+            <CustomTable columns={CustomTableColumn} data={tableData} />
           )}
         </div>
       </div>
     </>
-    // </div>
   );
 }
 

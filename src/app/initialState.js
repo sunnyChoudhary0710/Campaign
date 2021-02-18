@@ -1,13 +1,8 @@
 const InitialState = {
   campaigns: {
     campaignList: [],
-    isLoading: true,
+    isLoading: false,
     isError: false,
-    searchKey: "",
-    dateRange: {
-      from: null,
-      to: null,
-    },
   },
 };
 
