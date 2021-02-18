@@ -1,69 +1,125 @@
 import React from "react";
-import { TextField } from "@material-ui/core";
 import moment from "moment";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import { handleSearchBy } from "../../../app/actions";
-import { connect } from "react-redux";
 
 const Filter = (props) => {
-  let currentDate = new Date();
+  const [formData, updateFormDate] = React.useState(
+    props.formDate || { startDate: null, endDate: null, userName: "" }
+  );
+  const [validDateRange, updateValidDateRange] = React.useState({
+    startDate: {
+      min: null,
+      max: null,
+    },
+    endDate: {
+      min: null,
+      max: null,
+    },
+  });
 
-  const handleSearchBy = (value) => {
-    props.handleSearchBy(value);
+  const handleOnChange = (event) => {
+    let name = event.target.name;
+    let value = event.target.value;
+    let type = event.target.type;
+    if (type === "date") {
+      validateDataEntered(event);
+    }
+    updateFormDate((state) => ({ ...state, [name]: value }));
+  };
+
+  const validateDataEntered = (event) => {
+    let type = event.target.type;
+    let name = event.target.name;
+    let value = event.target.value;
+    if (Boolean(value)) {
+      if (type === "date") {
+        setMinMaxValue(name, value);
+      }
+    }
+  };
+
+  const setMinMaxValue = (name, value) => {
+    if (name === "startDate") {
+      updateValidDateRange((state) => ({
+        ...state,
+        endDate: {
+          min: value,
+          max: null,
+        },
+      }));
+    } else {
+      updateValidDateRange((state) => ({
+        ...state,
+        startDate: {
+          min: null,
+          max: value,
+        },
+      }));
+    }
+  };
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+    props.triggerSearch(formData);
   };
 
   return (
     <div className="element-container">
       <form className="filter-date-container" noValidate autoComplete="off">
         <div>
-          <TextField
+          <label htmlFor="startDate">Start Date</label>
+          <input
             id="date"
-            label="Start Date"
             type="date"
-            defaultValue={moment(currentDate).format("YYYY-MM-DD")}
-            InputLabelProps={{
-              shrink: true,
-            }}
+            name="startDate"
+            placeholder="Select a start date"
+            onChange={handleOnChange}
+            max={validDateRange.startDate.max}
+            min={validDateRange.startDate.min}
+            defaultValue={
+              formData.startDate
+                ? moment(formData.startDate).format("YYYY-MM-DD")
+                : null
+            }
             className="basic-form-element-margin"
           />
-          <TextField
+          <label htmlFor="endDate">End Date</label>
+          <input
             id="date"
             label="End Date"
             type="date"
-            defaultValue={moment(currentDate).format("YYYY-MM-DD")}
-            InputLabelProps={{
-              shrink: true,
-            }}
+            name="endDate"
+            placeholder="Select an end date"
+            max={validDateRange.endDate.max}
+            min={validDateRange.endDate.min}
+            onChange={handleOnChange}
+            defaultValue={
+              formData.endDate
+                ? moment(formData.endDate).format("YYYY-MM-DD")
+                : null
+            }
             className="basic-form-element-margin"
           />
         </div>
         <div>
-          <InputLabel id="demo-simple-select-label">Age</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={props.searchBy}
-            onChange={handleSearchBy}
-          >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </Select>
-          <TextField
+          <input
             id="outlined-basic"
             label="Search"
+            name="userName"
+            placeholder="Search by user name"
+            onChange={handleOnChange}
             value={props.searchKey}
           />
+          <button
+            id="outlined-basic"
+            placeholder="Search by user name"
+            onClick={handleSearch}
+          >
+            Search
+          </button>
         </div>
       </form>
     </div>
   );
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  searchBy: state.filterForm,
-});
-const mapDispatchToProps = { handleSearchBy };
-export default connect(mapStateToProps, mapDispatchToProps)(Filter);
+export default Filter;
