@@ -1,18 +1,18 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
-    alignItems: 'center',
-    '& > * + *': {
+    display: "flex",
+    alignItems: "center",
+    "& > * + *": {
       marginLeft: theme.spacing(2),
     },
   },
 }));
 
-export default function CampaignLoader() {
+const CampaignLoader = () => {
   const classes = useStyles();
 
   return (
@@ -20,4 +20,6 @@ export default function CampaignLoader() {
       <CircularProgress />
     </div>
   );
-}
+};
+
+export default CampaignLoader;

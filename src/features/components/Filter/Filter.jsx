@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import moment from "moment";
+import { CAMPAIGN_ENUMS } from "../common/Enums";
 
 const Filter = (props) => {
-  const [formData, updateFormDate] = React.useState(
+  const [formData, updateFormDate] = useState(
     props.formDate || { startDate: null, endDate: null, userName: "" }
   );
-  const [validDateRange, updateValidDateRange] = React.useState({
+  const [validDateRange, updateValidDateRange] = useState({
     startDate: {
       min: null,
       max: null,
@@ -16,11 +17,15 @@ const Filter = (props) => {
     },
   });
 
+  useEffect(() => {
+    props.triggerSearch(formData, CAMPAIGN_ENUMS.DATE);
+  }, [formData.startDate, formData.endDate]);
+
   const handleOnChange = (event) => {
     let name = event.target.name;
     let value = event.target.value;
     let type = event.target.type;
-    if (type === "date") {
+    if (type === CAMPAIGN_ENUMS.DATE) {
       validateDataEntered(event);
     }
     updateFormDate((state) => ({ ...state, [name]: value }));
@@ -31,14 +36,14 @@ const Filter = (props) => {
     let name = event.target.name;
     let value = event.target.value;
     if (Boolean(value)) {
-      if (type === "date") {
+      if (type === CAMPAIGN_ENUMS.DATE) {
         setMinMaxValue(name, value);
       }
     }
   };
 
   const setMinMaxValue = (name, value) => {
-    if (name === "startDate") {
+    if (name === CAMPAIGN_ENUMS.START_DATE) {
       updateValidDateRange((state) => ({
         ...state,
         endDate: {
@@ -59,7 +64,7 @@ const Filter = (props) => {
 
   const handleSearch = (event) => {
     event.preventDefault();
-    props.triggerSearch(formData);
+    props.triggerSearch(formData, CAMPAIGN_ENUMS.NAME);
   };
 
   return (
