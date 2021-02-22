@@ -1,5 +1,5 @@
 import moment from "moment";
-import store from "../../../app/store";
+import store from "../../../redux/store";
 import { CAMPAIGN_ENUMS } from "../common/Enums";
 
 export const createNewCampaignList = (campaign) => {

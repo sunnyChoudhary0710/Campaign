@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
-import { addNewCampaign } from "./app/actions";
+import { addNewCampaign } from "./redux/actions";
 import App from "./App";
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
   repos: state.campaignList || [],
 });
 const mapDispatchToProps = { addNewCampaign };

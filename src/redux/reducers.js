@@ -9,14 +9,6 @@ export const campaigns = (state = InitialState, action) => {
       return state;
     case "SET_LOADING":
       return { ...state, isLoading: action.payload };
-    case "SET_LOADING":
-      return {
-        ...state,
-        filterForm: {
-          searchBy: action.payload,
-          searchKey: state.filterForm.searchKey,
-        },
-      };
     default:
       return state;
   }
